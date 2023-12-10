@@ -58,4 +58,12 @@ function watchTask() {
 // Default Gulp Task
 exports.default = series(scssTask, jsTask, browserSyncServe, watchTask);
 
-exports.build = series(scssTask, jsTask);
+var browserSync = require('browser-sync');
+
+gulp.task('webserver', function() {
+    browserSync({
+        server: {
+            baseDir: "https://im8kritika.github.io/wordle-/"
+        }
+    });
+});

@@ -70,7 +70,16 @@ let currentGuessCount=1;
 let currentGuess=document.querySelector('#guess'+currentGuessCount);
 let currentLetters = currentGuess.dataset.letters;
 
-document.addEventListener("keydown", (e) => {
+function startInteraction(){
+  document.addEventListener('click',handleMouseClick);
+  document.addEventListener('keydown',handleKeyPress);
+}
+
+function handleMouseClick(){
+  
+}
+
+function handleKeyPress(e){ 
   let keyElement = document.querySelector(`.key[data-key="${e.key}"]`);
   if (keyElement) {
     keyElement.classList.add('marked');
@@ -99,17 +108,17 @@ else if(e.key==='Enter' && currentGuess.dataset.letters.length==5 &&currentGuess
       revealPromises.push(revealTile(i,checkLetter(i,localGuessCount)));
     }
     matchedPositions = [];
-    let currentGuessForWin = currentGuess; // Store the current guess
+    let currentGuessForWin = currentGuess; 
     Promise.all(revealPromises).then(() => {
       if (guessWord === solution) {
-        winTiles(currentGuessForWin); // Pass the stored current guess
+        winTiles(currentGuessForWin); 
         gameOver = true;
-        return; // Stop further execution
+        return; 
       }
       else if (currentGuessCount > 6) {
         alert('You lose! The correct word was ' + solution);
         gameOver = true;
-        return; // Stop further execution
+        return; 
       }
     });
 
@@ -123,7 +132,7 @@ else if(e.key==='Enter' && currentGuess.dataset.letters.length==5 &&currentGuess
     errorTiles(currentGuess);
   }
 }
-});
+};
 
 
 let isWinAnimationRunning = false;
