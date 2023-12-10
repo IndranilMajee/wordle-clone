@@ -58,12 +58,14 @@ function watchTask() {
 // Default Gulp Task
 exports.default = series(scssTask, jsTask, browserSyncServe, watchTask);
 
-var browserSync = require('browser-sync');
+exports.build = series(scssTask, jsTask);
 
-gulp.task('webserver', function() {
-    browserSync({
-        server: {
-            baseDir: "https://im8kritika.github.io/wordle-/"
-        }
-    });
+const relative = require('./tasks/document-relative');
+gulp.task('relative-urls', function() {
+    return gulp.src('build/**/*.html')
+        .pipe( relative({
+            directory: 'build',
+            url: 'https://indranilmajee.github.io/wordle-clone/',
+        }) )
+        .pipe( gulp.dest('build') );
 });
