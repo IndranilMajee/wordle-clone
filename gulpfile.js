@@ -28,7 +28,7 @@ function jsTask() {
 function browserSyncServe(cb) {
 	browsersync.init({
 		server: {
-			baseDir: '.',
+			baseDir: './',
 		},
 		notify: {
 			styles: {
@@ -36,6 +36,7 @@ function browserSyncServe(cb) {
 				bottom: '0',
 			},
 		},
+		open: false
 	});
 	cb();
 }
