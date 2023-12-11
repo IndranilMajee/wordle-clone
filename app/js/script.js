@@ -134,7 +134,9 @@ function handleMouseClick(e){
       }
     }
     keyElement.blur();
+    keyElement.removeEventListener('click', handleMouseClick);
   }
+
 }
 
 function handleKeyPress(e){ 
