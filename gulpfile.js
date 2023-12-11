@@ -8,8 +8,6 @@ const babel = require('gulp-babel');
 const terser = require('gulp-terser');
 const browsersync = require('browser-sync').create();
 
-// sass.compiler =require('dart-sass');
-
 // Sass Task
 function scssTask() {
 	return src('app/scss/style.scss', { sourcemaps: true })
@@ -50,7 +48,7 @@ function browserSyncReload(cb) {
 function watchTask() {
 	watch('*.html', browserSyncReload);
 	watch(
-		['app/scss/**/*.scss', 'app/**/*.js'],
+		['app/scss/**/*.css', 'app/**/*.js'],
 		series(scssTask, jsTask, browserSyncReload)
 	);
 }
@@ -58,14 +56,16 @@ function watchTask() {
 // Default Gulp Task
 exports.default = series(scssTask, jsTask, browserSyncServe, watchTask);
 
-exports.build = series(scssTask, jsTask);
+// //Build Task
+// exports.build = series(scssTask, jsTask);
 
-const relative = require('./tasks/document-relative');
-gulp.task('relative-urls', function() {
-    return gulp.src('build/**/*.html')
-        .pipe( relative({
-            directory: 'build',
-            url: 'https://indranilmajee.github.io/wordle-clone/',
-        }) )
-        .pipe( gulp.dest('build') );
+var gulp        = require('gulp');
+var deploy      = require('gulp-gh-pages');
+
+/**
+ * Push build to gh-pages
+ */
+gulp.task('deploy', function () {
+  return gulp.src("./dist/**/*")
+    .pipe(deploy())
 });

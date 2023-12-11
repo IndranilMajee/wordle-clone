@@ -71,12 +71,70 @@ let currentGuess=document.querySelector('#guess'+currentGuessCount);
 let currentLetters = currentGuess.dataset.letters;
 
 function startInteraction(){
-  document.addEventListener('click',handleMouseClick);
+  let keys = document.querySelectorAll('.key');
+  keys.forEach(key => {
+    key.addEventListener('click', handleMouseClick);
+  });
   document.addEventListener('keydown',handleKeyPress);
 }
 
-function handleMouseClick(){
-  
+
+function handleMouseClick(e){
+  console.log('click');
+  let keyElement = e.target;
+  if (keyElement.classList.contains('key')) {
+    let keyPress = keyElement.dataset.key;
+    keyElement.classList.add('marked');
+    if (gameOver) {
+      return;
+    }
+    //if key is a letter
+    if(keyPress.length==1 && lettersPattern.test(keyPress)){
+      updateLetters(keyPress);
+    }
+    //if key is backspace
+    else if(keyPress === 'Backspace'){
+      console.log('backspace');
+      deleteFromLetters();
+    }
+    //if key is enter
+    else if(keyPress === 'Enter' && currentGuess.dataset.letters.length==5 && currentGuessCount<=6){
+      let guessWord = currentGuess.dataset.letters;
+      //change the guess word to lower case
+      guessWord = guessWord.toLowerCase();
+      if (isWordInDictionary(guessWord, dictionary)) {
+        let localGuessCount = currentGuessCount;
+        let revealPromises = [];
+        for(let i=0; i<5; i++){
+          revealPromises.push(revealTile(i,checkLetter(i,localGuessCount)));
+        }
+        matchedPositions = [];
+        let currentGuessForWin = currentGuess; 
+        Promise.all(revealPromises).then(() => {
+          if (guessWord === solution) {
+            winTiles(currentGuessForWin); 
+            gameOver = true;
+            return; 
+          }
+          else if (currentGuessCount > 6) {
+            alert('You lose! The correct word was ' + solution);
+            gameOver = true;
+            return; 
+          }
+        });
+    
+        currentGuess.dataset.completed = 'true';
+        if (!gameOver) {
+          currentGuessCount++;
+          currentGuess = document.querySelector('#guess' + currentGuessCount);
+        }
+      }
+      else{
+        errorTiles(currentGuess);
+      }
+    }
+    keyElement.blur();
+  }
 }
 
 function handleKeyPress(e){ 
@@ -299,6 +357,18 @@ const flipTile = (tileNumber, status, currentGuessCount) => {
     tile.classList.remove('flip-in');
     tile.classList.add('flip-out');
     tile.classList.add(status); 
+
+    // Get the letter from the tile
+    let letter = tile.textContent.toLowerCase();
+
+    // Find the corresponding key element
+    let keyElement = document.querySelector(`.key[data-key="${letter}"]`);
+
+    // Add the status class to the key element
+    if (keyElement) {
+      keyElement.classList.add(status);
+    }
+
     // Add the color after the flip animation is complete
     switch (status) {
       case 'correct': tile.classList.add('correct'); break;
@@ -309,3 +379,6 @@ const flipTile = (tileNumber, status, currentGuessCount) => {
     }
   }, 500);
 }
+
+
+startInteraction();
