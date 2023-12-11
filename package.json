@@ -26,7 +26,7 @@
   ],
   "main": "gulpfile.js",
   "scripts": {
-    "start": "gulp",
+    "start": "gulp build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
