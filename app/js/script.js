@@ -1,4 +1,7 @@
 //getting solution words from the json file
+document.getElementById('refresh-icon').addEventListener('click', function() {
+  location.reload();
+});
 let gameOver = false;
 const target_wordsUrl = 'target_words.json';
 
@@ -78,7 +81,7 @@ function startInteraction(){
   document.addEventListener('keydown',handleKeyPress);
 }
 
-
+let clickCount = 0;
 function handleMouseClick(e){
   console.log('click');
   let keyElement = e.target;
@@ -94,8 +97,12 @@ function handleMouseClick(e){
     }
     //if key is backspace
     else if(keyPress === 'Backspace'){
-      console.log('backspace');
-      deleteFromLetters();
+      for (let i = 0; i < clickCount; i++) {
+        console.log('backspace');
+        deleteFromLetters();
+        // Code to delete a tile...
+      }
+      clickCount = 0;
     }
     //if key is enter
     else if(keyPress === 'Enter' && currentGuess.dataset.letters.length==5 && currentGuessCount<=6){
@@ -133,9 +140,11 @@ function handleMouseClick(e){
         errorTiles(currentGuess);
       }
     }
-    keyElement.blur();
+    
+    // keyElement.blur();
     keyElement.removeEventListener('click', handleMouseClick);
   }
+  e.target.blur();
 
 }
 
