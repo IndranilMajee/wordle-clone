@@ -58,7 +58,7 @@ function watchTask() {
 exports.default = series(scssTask, jsTask, browserSyncServe, watchTask);
 
 // //Build Task
-// exports.build = series(scssTask, jsTask);
+exports.build = series(scssTask, jsTask);
 
 var gulp        = require('gulp');
 var deploy      = require('gulp-gh-pages');
