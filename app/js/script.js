@@ -140,9 +140,6 @@ function handleMouseClick(e){
         errorTiles(currentGuess);
       }
     }
-    
-    // keyElement.blur();
-    keyElement.removeEventListener('click', handleMouseClick);
   }
   e.target.blur();
 
